@@ -1,0 +1,118 @@
+package dao;
+
+import dto.CharacterDTO;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CharacterDAOImpl implements CharacterDAO {
+    private final String URL = "jdbc:mysql://localhost:3306/paper_mario_db";
+    private final String USER = "root"; // your DB username
+    private final String PASSWORD = ""; // your DB password
+
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
+    }
+
+    @Override
+    public List<CharacterDTO> getAllCharacters() {
+        List<CharacterDTO> characters = new ArrayList<>();
+        String query = "SELECT * FROM characters";
+
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                characters.add(new CharacterDTO(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("level"),
+                        rs.getInt("hp"),
+                        rs.getFloat("attackPower")
+                ));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return characters;
+    }
+
+    @Override
+    public CharacterDTO getCharacterById(int id) {
+        String query = "SELECT * FROM characters WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new CharacterDTO(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("level"),
+                        rs.getInt("hp"),
+                        rs.getFloat("attackPower")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean insertCharacter(CharacterDTO character) {
+        String query = "INSERT INTO characters (name, level, hp, attackPower) VALUES (?, ?, ?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, character.getName());
+            pstmt.setInt(2, character.getLevel());
+            pstmt.setInt(3, character.getHp());
+            pstmt.setFloat(4, character.getAttackPower());
+            return pstmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateCharacter(CharacterDTO character) {
+        String query = "UPDATE characters SET name = ?, level = ?, hp = ?, attackPower = ? WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, character.getName());
+            pstmt.setInt(2, character.getLevel());
+            pstmt.setInt(3, character.getHp());
+            pstmt.setFloat(4, character.getAttackPower());
+            pstmt.setInt(5, character.getId());
+            return pstmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteCharacter(int id) {
+        String query = "DELETE FROM characters WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, id);
+            return pstmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+}
