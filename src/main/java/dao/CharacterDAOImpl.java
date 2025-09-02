@@ -5,6 +5,8 @@ import dto.CharacterDTO;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class CharacterDAOImpl implements CharacterDAO {
     private final String URL = "jdbc:mysql://localhost:3306/paper_mario_db";
@@ -114,5 +116,13 @@ public class CharacterDAOImpl implements CharacterDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public List<CharacterDTO> findCharactersByFilter(Predicate<CharacterDTO> filter) {
+        List<CharacterDTO> all = getAllCharacters(); // get all characters from DB
+        return all.stream()
+                .filter(filter)           // keep only those matching the condition
+                .collect(Collectors.toList());
     }
 }

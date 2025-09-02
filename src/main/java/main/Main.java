@@ -20,6 +20,7 @@ public class Main {
             System.out.println("2. View character by ID");
             System.out.println("3. Delete character");
             System.out.println("4. Add new character");
+            System.out.println("5. View character(s) above a certain level");
             System.out.println("0. Exit");
             System.out.print("Enter choice: ");
             choice = scanner.nextInt();
@@ -57,6 +58,18 @@ public class Main {
                     boolean inserted = dao.insertCharacter(new CharacterDTO(name, level, hp, attack));
                     System.out.println(inserted ? "Character added!" : "Failed to add character.");
                     break;
+                case 5:
+                    System.out.print("Enter minimum level to filter: ");
+                    int minLevel = scanner.nextInt();
+                    scanner.nextLine();
+
+                    List<CharacterDTO> filtered = dao.findCharactersByFilter(c -> c.getLevel() >= minLevel);
+
+                    if (filtered.isEmpty()) {
+                        System.out.println("No characters match the filter.");
+                    } else {
+                        filtered.forEach(System.out::println);
+                    }
                 case 0:
                     System.out.println("Exiting program.");
                     break;
