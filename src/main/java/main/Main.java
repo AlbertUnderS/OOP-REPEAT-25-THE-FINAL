@@ -18,6 +18,7 @@ public class Main {
             System.out.println("\n=== Paper Mario Character Menu ===");
             System.out.println("1. List all characters");
             System.out.println("2. View character by ID");
+            System.out.println("3. Delete character");
             System.out.println("0. Exit");
             System.out.print("Enter choice: ");
             choice = scanner.nextInt();
@@ -34,6 +35,13 @@ public class Main {
                     scanner.nextLine();
                     CharacterDTO character = dao.getCharacterById(id);
                     System.out.println(character != null ? character : "Character not found");
+                    break;
+                case 3:
+                    System.out.print("Enter ID to delete: ");
+                    int deleteId = scanner.nextInt();
+                    scanner.nextLine();
+                    boolean deleted = dao.deleteCharacter(deleteId);
+                    System.out.println(deleted ? "Character deleted!" : "Delete failed.");
                     break;
 
                 case 0:
