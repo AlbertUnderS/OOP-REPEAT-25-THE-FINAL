@@ -18,6 +18,7 @@ public class ClientMain {
                 System.out.println("\n=== Paper Mario Client Menu ===");
                 System.out.println("1. Display character by ID");
                 System.out.println("2. Display all characters");
+                System.out.println("3. Add a character");
                 System.out.println("0. Exit");
                 System.out.print("Choice: ");
                 choice = scanner.nextInt();
@@ -64,6 +65,43 @@ public class ClientMain {
                                     ", Attack: " + c.getDouble("attackPower"));
                         }
                         break;
+                    case 3:
+                        JSONObject newChar = new JSONObject();
+
+                        System.out.print("Name: ");
+                        newChar.put("name", scanner.nextLine());
+
+                        System.out.print("Level: ");
+                        newChar.put("level", scanner.nextInt());
+
+                        System.out.print("HP: ");
+                        newChar.put("hp", scanner.nextInt());
+
+                        System.out.print("Attack Power: ");
+                        newChar.put("attackPower", scanner.nextFloat());
+                        scanner.nextLine(); // consume newline
+
+                        JSONObject requestInsert = new JSONObject();
+                        requestInsert.put("action", "INSERT");
+                        requestInsert.put("character", newChar);
+
+                        out.println(requestInsert.toString());
+
+                        String insertResponse = in.readLine();
+                        JSONObject insertedChar = new JSONObject(insertResponse);
+
+                        if(insertedChar.has("error")) {
+                            System.out.println("Error: " + insertedChar.getString("error"));
+                        } else {
+                            System.out.println("New character added:");
+                            System.out.println("ID: " + insertedChar.getInt("id"));
+                            System.out.println("Name: " + insertedChar.getString("name"));
+                            System.out.println("Level: " + insertedChar.getInt("level"));
+                            System.out.println("HP: " + insertedChar.getInt("hp"));
+                            System.out.println("Attack Power: " + insertedChar.getDouble("attackPower"));
+                        }
+                        break;
+
 
                     case 0:
                         System.out.println("Exiting.");
