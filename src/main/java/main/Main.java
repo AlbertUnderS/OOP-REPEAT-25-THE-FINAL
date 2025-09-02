@@ -17,6 +17,7 @@ public class Main {
         do {
             System.out.println("\n=== Paper Mario Character Menu ===");
             System.out.println("1. List all characters");
+            System.out.println("2. View character by ID");
             System.out.println("0. Exit");
             System.out.print("Enter choice: ");
             choice = scanner.nextInt();
@@ -27,7 +28,13 @@ public class Main {
                     List<CharacterDTO> characters = dao.getAllCharacters();
                     characters.forEach(System.out::println);
                     break;
-
+                case 2:
+                    System.out.print("Enter character ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine();
+                    CharacterDTO character = dao.getCharacterById(id);
+                    System.out.println(character != null ? character : "Character not found");
+                    break;
 
                 case 0:
                     System.out.println("Exiting program.");
