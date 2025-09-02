@@ -70,6 +70,7 @@ public class Main {
                     } else {
                         filtered.forEach(System.out::println);
                     }
+                    break;
                 case 0:
                     System.out.println("Exiting program.");
                     break;
