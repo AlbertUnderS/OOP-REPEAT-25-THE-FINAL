@@ -20,4 +20,5 @@ public interface CharacterDAO {
     String findCharacterByIdJson(int id);
 
 
+
 }
