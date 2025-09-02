@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class CharacterDAOImpl implements CharacterDAO {
     private final String URL = "jdbc:mysql://localhost:3306/paper_mario_db";
     private final String USER = "root"; // your DB username
@@ -45,6 +48,11 @@ public class CharacterDAOImpl implements CharacterDAO {
 
     @Override
     public CharacterDTO getCharacterById(int id) {
+        if (!characterIdCache.contains(id)) {
+            System.out.println("ID not found in cache. Skipping DB query.");
+            return null;
+        }
+
         String query = "SELECT * FROM characters WHERE id = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -70,13 +78,22 @@ public class CharacterDAOImpl implements CharacterDAO {
     public boolean insertCharacter(CharacterDTO character) {
         String query = "INSERT INTO characters (name, level, hp, attackPower) VALUES (?, ?, ?, ?)";
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+             PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, character.getName());
             pstmt.setInt(2, character.getLevel());
             pstmt.setInt(3, character.getHp());
             pstmt.setFloat(4, character.getAttackPower());
-            return pstmt.executeUpdate() > 0;
+            int rows = pstmt.executeUpdate();
+
+            if (rows > 0) {
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    character.setId(rs.getInt(1));
+                    characterIdCache.add(character.getId()); // update cache
+                }
+                return true;
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -110,7 +127,11 @@ public class CharacterDAOImpl implements CharacterDAO {
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setInt(1, id);
-            return pstmt.executeUpdate() > 0;
+            boolean deleted = pstmt.executeUpdate() > 0;
+            if (deleted) {
+                characterIdCache.remove(id); // remove from cache
+            }
+            return deleted;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -125,4 +146,18 @@ public class CharacterDAOImpl implements CharacterDAO {
                 .filter(filter)           // keep only those matching the condition
                 .collect(Collectors.toList());
     }
+
+    private Set<Integer> characterIdCache = new HashSet<>();
+
+    public CharacterDAOImpl() {
+        populateCache();
+    }
+
+    private void populateCache() {
+        characterIdCache.clear();
+        for (CharacterDTO c : getAllCharacters()) {
+            characterIdCache.add(c.getId());
+        }
+    }
+
 }
