@@ -29,7 +29,12 @@ public class ClientHandler implements Runnable {
                     int id = jsonRequest.getInt("id");
                     String characterJson = dao.findCharacterByIdJson(id);
                     out.println(characterJson);
-                } else {
+                }
+                if(action.equals("GET_ALL")) {
+                    // Use DAO to get all characters in JSON format
+                    out.println(dao.findAllCharactersJson());
+                }
+                else {
                     out.println(new JSONObject().put("error","Unknown action").toString());
                 }
             }

@@ -17,6 +17,7 @@ public class ClientMain {
             do {
                 System.out.println("\n=== Paper Mario Client Menu ===");
                 System.out.println("1. Display character by ID");
+                System.out.println("2. Display all characters");
                 System.out.println("0. Exit");
                 System.out.print("Choice: ");
                 choice = scanner.nextInt();
@@ -45,6 +46,25 @@ public class ClientMain {
                             System.out.println("Attack Power: " + jsonResponse.getDouble("attackPower"));
                         }
                         break;
+                    case 2:
+                        JSONObject requestAll = new JSONObject();
+                        requestAll.put("action", "GET_ALL");
+                        out.println(requestAll.toString());
+
+                        String responseAll = in.readLine();
+                        org.json.JSONArray array = new org.json.JSONArray(responseAll);
+
+                        System.out.println("All Characters:");
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject c = array.getJSONObject(i);
+                            System.out.println("ID: " + c.getInt("id") +
+                                    ", Name: " + c.getString("name") +
+                                    ", Level: " + c.getInt("level") +
+                                    ", HP: " + c.getInt("hp") +
+                                    ", Attack: " + c.getDouble("attackPower"));
+                        }
+                        break;
+
                     case 0:
                         System.out.println("Exiting.");
                         break;
