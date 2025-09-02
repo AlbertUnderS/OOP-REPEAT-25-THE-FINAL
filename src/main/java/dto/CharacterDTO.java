@@ -16,7 +16,7 @@ public class CharacterDTO {
         this.attackPower = attackPower;
     }
 
-    // Overloaded constructor without id (for inserting new characters)
+    //Constructor without id (for inserting new characters)
     public CharacterDTO(String name, int level, int hp, float attackPower) {
         this.name = name;
         this.level = level;

@@ -132,7 +132,7 @@ public class CharacterDAOImpl implements CharacterDAO {
             pstmt.setInt(1, id);
             boolean deleted = pstmt.executeUpdate() > 0;
             if (deleted) {
-                characterIdCache.remove(id); // remove from cache
+                characterIdCache.remove(id);
             }
             return deleted;
 
@@ -144,9 +144,9 @@ public class CharacterDAOImpl implements CharacterDAO {
 
     @Override
     public List<CharacterDTO> findCharactersByFilter(Predicate<CharacterDTO> filter) {
-        List<CharacterDTO> all = getAllCharacters(); // get all characters from DB
+        List<CharacterDTO> all = getAllCharacters();
         return all.stream()
-                .filter(filter)           // keep only those matching the condition
+                .filter(filter)
                 .collect(Collectors.toList());
     }
 
@@ -189,7 +189,6 @@ public class CharacterDAOImpl implements CharacterDAO {
         CharacterDTO c = getCharacterById(id);
 
         if (c == null) {
-            // Return empty JSON object or a message
             JSONObject obj = new JSONObject();
             obj.put("error", "Character not found");
             return obj.toString();

@@ -28,33 +28,35 @@ public class ClientHandler implements Runnable {
 
                 if(action.equals("GET_BY_ID")) {
                     int id = jsonRequest.getInt("id");
-                    String characterJson = dao.findCharacterByIdJson(id);
-                    out.println(characterJson);
-                }
-                if(action.equals("GET_ALL")) {
-                    out.println(dao.findAllCharactersJson());
-                }
-                if(action.equals("INSERT")) {
-                    JSONObject charObj = jsonRequest.getJSONObject("character");
+                    out.println(dao.findCharacterByIdJson(id));
 
+                } else if(action.equals("GET_ALL")) {
+                    out.println(dao.findAllCharactersJson());
+
+                } else if(action.equals("INSERT")) {
+                    JSONObject charObj = jsonRequest.getJSONObject("character");
                     CharacterDTO c = new CharacterDTO(
                             charObj.getString("name"),
                             charObj.getInt("level"),
                             charObj.getInt("hp"),
                             (float) charObj.getDouble("attackPower")
                     );
-
                     boolean success = dao.insertCharacter(c);
+                    out.println(success ? dao.findCharacterByIdJson(c.getId())
+                            : new JSONObject().put("error","Insert failed").toString());
 
-                    if(success) {
-                        // Return the inserted character as JSON
-                        out.println(dao.findCharacterByIdJson(c.getId()));
-                    } else {
-                        out.println(new JSONObject().put("error", "Insert failed").toString());
-                    }
+                } else if(action.equals("DELETE")) {
+                    int idToDelete = jsonRequest.getInt("id");
+                    boolean deleteSuccess = dao.deleteCharacter(idToDelete);
+                    JSONObject response = new JSONObject();
+                    response.put("success", deleteSuccess);
+                    if(!deleteSuccess) response.put("error", "Character not found or delete failed");
+                    out.println(response.toString());
+
                 } else {
                     out.println(new JSONObject().put("error","Unknown action").toString());
                 }
+
             }
 
         } catch (Exception e) {

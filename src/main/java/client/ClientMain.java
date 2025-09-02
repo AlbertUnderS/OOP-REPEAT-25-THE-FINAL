@@ -15,10 +15,11 @@ public class ClientMain {
 
             int choice;
             do {
-                System.out.println("\n=== Paper Mario Client Menu ===");
+                System.out.println("\n=== Paper Mario Character Client Menu ===");
                 System.out.println("1. Display character by ID");
                 System.out.println("2. Display all characters");
                 System.out.println("3. Add a character");
+                System.out.println("4. Delete a character by ID");
                 System.out.println("0. Exit");
                 System.out.print("Choice: ");
                 choice = scanner.nextInt();
@@ -99,6 +100,28 @@ public class ClientMain {
                             System.out.println("Level: " + insertedChar.getInt("level"));
                             System.out.println("HP: " + insertedChar.getInt("hp"));
                             System.out.println("Attack Power: " + insertedChar.getDouble("attackPower"));
+                        }
+                        break;
+
+                    case 4: // Delete a character by ID
+                        System.out.print("Enter ID to delete: ");
+                        int deleteId = scanner.nextInt();
+                        scanner.nextLine();
+
+                        JSONObject deleteRequest = new JSONObject();
+                        deleteRequest.put("action", "DELETE");
+                        deleteRequest.put("id", deleteId);
+
+                        out.println(deleteRequest.toString());
+
+                        String deleteResponse = in.readLine();
+                        JSONObject jsonDeleteResponse = new JSONObject(deleteResponse);
+
+                        if(jsonDeleteResponse.has("success") && jsonDeleteResponse.getBoolean("success")) {
+                            System.out.println("Character deleted successfully!");
+                        } else {
+                            String errorMsg = jsonDeleteResponse.has("error") ? jsonDeleteResponse.getString("error") : "Delete failed";
+                            System.out.println("Error: " + errorMsg);
                         }
                         break;
 

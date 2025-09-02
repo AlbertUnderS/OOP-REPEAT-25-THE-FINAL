@@ -73,10 +73,10 @@ public class Main {
                         filtered.forEach(System.out::println);
                     }
                     break;
-                case 6: // JSON all characters
+                case 6:
                     System.out.println(dao.findAllCharactersJson());
                     break;
-                case 7: // JSON single character
+                case 7:
                     System.out.print("Enter character ID: ");
                     int jsonId = scanner.nextInt();
                     scanner.nextLine();
