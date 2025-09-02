@@ -14,4 +14,9 @@ public interface CharacterDAO {
     boolean deleteCharacter(int id);
     List<CharacterDTO> findCharactersByFilter(Predicate<CharacterDTO> filter);
 
+
+    // Feature 7 & 8
+    String findAllCharactersJson();
+
+
 }

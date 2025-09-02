@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class CharacterDAOImpl implements CharacterDAO {
     private final String URL = "jdbc:mysql://localhost:3306/paper_mario_db";
     private final String USER = "root"; // your DB username
@@ -159,5 +162,28 @@ public class CharacterDAOImpl implements CharacterDAO {
             characterIdCache.add(c.getId());
         }
     }
+
+
+
+
+    @Override
+    public String findAllCharactersJson() {
+        List<CharacterDTO> all = getAllCharacters();
+        JSONArray jsonArray = new JSONArray();
+
+        for (CharacterDTO c : all) {
+            JSONObject obj = new JSONObject();
+            obj.put("id", c.getId());
+            obj.put("name", c.getName());
+            obj.put("level", c.getLevel());
+            obj.put("hp", c.getHp());
+            obj.put("attackPower", c.getAttackPower());
+            jsonArray.put(obj);
+        }
+
+        return jsonArray.toString(); // returns JSON string of all characters
+    }
+
+
 
 }
