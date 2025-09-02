@@ -21,8 +21,8 @@ public class Main {
             System.out.println("3. Delete character");
             System.out.println("4. Add new character");
             System.out.println("5. View character(s) above a certain level");
-            System.out.println("6. retrive all entities by json");
-
+            System.out.println("6. retrive all characters by json");
+            System.out.println("7. retrieve a single character by json");
             System.out.println("0. Exit");
             System.out.print("Enter choice: ");
             choice = scanner.nextInt();
@@ -75,6 +75,12 @@ public class Main {
                     break;
                 case 6: // JSON all characters
                     System.out.println(dao.findAllCharactersJson());
+                    break;
+                case 7: // JSON single character
+                    System.out.print("Enter character ID: ");
+                    int jsonId = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println(dao.findCharacterByIdJson(jsonId));
                     break;
                 case 0:
                     System.out.println("Exiting program.");

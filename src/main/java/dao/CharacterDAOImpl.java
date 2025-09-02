@@ -181,8 +181,30 @@ public class CharacterDAOImpl implements CharacterDAO {
             jsonArray.put(obj);
         }
 
-        return jsonArray.toString(); // returns JSON string of all characters
+        return jsonArray.toString();
     }
+
+    @Override
+    public String findCharacterByIdJson(int id) {
+        CharacterDTO c = getCharacterById(id);
+
+        if (c == null) {
+            // Return empty JSON object or a message
+            JSONObject obj = new JSONObject();
+            obj.put("error", "Character not found");
+            return obj.toString();
+        }
+
+        JSONObject obj = new JSONObject();
+        obj.put("id", c.getId());
+        obj.put("name", c.getName());
+        obj.put("level", c.getLevel());
+        obj.put("hp", c.getHp());
+        obj.put("attackPower", c.getAttackPower());
+
+        return obj.toString();
+    }
+
 
 
 

@@ -17,6 +17,7 @@ public interface CharacterDAO {
 
     // Feature 7 & 8
     String findAllCharactersJson();
+    String findCharacterByIdJson(int id);
 
 
 }
