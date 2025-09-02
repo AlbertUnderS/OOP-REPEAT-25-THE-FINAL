@@ -19,6 +19,7 @@ public class Main {
             System.out.println("1. List all characters");
             System.out.println("2. View character by ID");
             System.out.println("3. Delete character");
+            System.out.println("4. Add new character");
             System.out.println("0. Exit");
             System.out.print("Enter choice: ");
             choice = scanner.nextInt();
@@ -43,7 +44,19 @@ public class Main {
                     boolean deleted = dao.deleteCharacter(deleteId);
                     System.out.println(deleted ? "Character deleted!" : "Delete failed.");
                     break;
-
+                case 4:
+                    System.out.print("Name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Level: ");
+                    int level = scanner.nextInt();
+                    System.out.print("HP: ");
+                    int hp = scanner.nextInt();
+                    System.out.print("Attack Power: ");
+                    float attack = scanner.nextFloat();
+                    scanner.nextLine();
+                    boolean inserted = dao.insertCharacter(new CharacterDTO(name, level, hp, attack));
+                    System.out.println(inserted ? "Character added!" : "Failed to add character.");
+                    break;
                 case 0:
                     System.out.println("Exiting program.");
                     break;
